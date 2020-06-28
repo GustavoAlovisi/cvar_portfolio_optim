@@ -9,7 +9,7 @@
 ################################################################################################
 
 import("modules")
-armaGarch_Est <- module({
+armaGarch_est_module <- module({
 #setwd("C:/Users/gusta/Desktop/tccGustavo/tccGustavo")
 import("xts") ##dealing with xts (time series) objects
 #library(quantmod) 
