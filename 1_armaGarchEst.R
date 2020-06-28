@@ -8,19 +8,15 @@
 #We store fitted sigma, residualds and arma-Garch parameters on lists.                         #
 ################################################################################################
 
-import("modules")
 armaGarch_est_module <- module({
-#setwd("C:/Users/gusta/Desktop/tccGustavo/tccGustavo")
+  
 import("xts") ##dealing with xts (time series) objects
-#library(quantmod) 
 import("rugarch") ##skewed-t garch estimation
 import("forecast") ##auto-arima estimation
   
 export("arma_garch_fit_store") ##available to main 
 
 ###########functions
-
-
 arima_est <- function(data){
   ##ARMA estimation
   xx <- forecast::auto.arima(y=data, max.p=2, max.d = 0,    #auto.arima fit, where we select (p,q) with better BIC criteria
@@ -28,7 +24,7 @@ arima_est <- function(data){
                              ic = c('bic'), allowmean =F, allowdrift = F)  #wont allow mean or drift since we expect mean(returns) = 0
   ordem <- forecast::arimaorder(xx) #getting arma orders 
   ordem <- c(ordem[1], ordem[3])  #getting [p,q]
-  return (ordem)
+  return(ordem)
 }
 
 garch_est <- function(data, ordem){
@@ -38,11 +34,11 @@ garch_est <- function(data, ordem){
                                             distribution.model = 'sstd') #creating garch(1,1) with skewed t specification
   garch_fit <- rugarch::ugarchfit(armagarchspec, data = data, solver = "hybrid") #fitting garch for the j asset
   #we use variance.targeting for faster estimation
-  return (garch_fit)
+  return(garch_fit)
 }
 
 coefs_vector <- function(ordem, garch_fit){ ###creating an easy-to-deal matrix of coefs
-  aux_list<-vector('list', 9)
+  aux_list <- vector('list', 9)
   if(ordem[1] == 0 && ordem[2] == 0){           
     aux_list[1:4] = 0                           ##from the form (AR1, AR2, MA1, MA2,  GARCH coefs)
     aux_list[5:9] = garch_fit@fit$coef[1:5]  
@@ -94,21 +90,18 @@ coefs_vector <- function(ordem, garch_fit){ ###creating an easy-to-deal matrix o
         aux_list[3]=garch_fit@fit$coef[2]
         aux_list[5:9]=garch_fit@fit$coef[3:7]
       } 
-    return (aux_list)
+    return(aux_list)
     }
 
 ###############
 
 #######ARMA GARCH ESTIMATION
-
-
 arma_garch_fit_store <- function(returns, per_est){
   residuos<- vector('list', nrow(returns))     #a list of list to store residuals, 
   coeficientes <- vector('list', nrow(returns)) #arma-garch coeficients and sigma from each asset estimation
   sigma <- vector('list', nrow(returns))
   for (i in 1:nrow(returns)){  ##for period 1:4500, we estimate ARMA-GARCH for each asset
     ret_data <- returns[i:per_est+(i-1)] #goes from window_sup-per_est to window_sup  (per_est=1260)
-     
     for (j in 2:ncol(returns))   #for period i, fit the model for every j>1 asset, where j=1 is Date column. 
     {
       ordem <- arima_est(ret_data[,j]) ##ARMA estimation
