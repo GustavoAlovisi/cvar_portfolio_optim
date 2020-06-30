@@ -9,7 +9,7 @@ The purpose of the work is to implement an ARMA(p,q)-GARCH(1,1) Mixture of Copul
 - Module 5 calculates out-of-sample performance of optimized weights and several plots and risk/returns benchmarks. 
 - Main simply loads log-returns data and calls for module's functions. 
 
-More information can be found at the complete paper in [Sabi UFRGS](https://lume.ufrgs.br/handle/10183/205651) or at a concise [PPT presentation](https://www.overleaf.com/read/hfsdtcnpqrmq). The code in this repo is an updated version of the code presented in my paper. 
+More information can be found at the complete paper in [Sabi UFRGS](https://lume.ufrgs.br/handle/10183/205651) or at a concise [PPT presentation](https://www.overleaf.com/read/hfsdtcnpqrmq). The code in this repo is an updated version of the code presented in my paper. Because resulting files are big, each module loads and saves information in local files. 
 
 
 
